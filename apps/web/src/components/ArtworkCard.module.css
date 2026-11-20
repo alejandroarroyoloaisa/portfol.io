@@ -1,0 +1,54 @@
+.card {
+  display: block;
+  color: inherit;
+  transition: transform 0.15s ease;
+}
+
+.card:hover {
+  color: inherit;
+  transform: translateY(-3px) rotate(0deg) !important;
+}
+
+.card:hover .figure {
+  box-shadow: 0 16px 30px rgba(20, 20, 20, 0.18);
+}
+
+.figure {
+  margin: 0;
+  padding: 10px 10px 14px;
+  background: var(--c-blanco);
+  box-shadow: var(--shadow-cut);
+}
+
+.frame {
+  position: relative;
+  height: 260px;
+  overflow: hidden;
+}
+
+.title {
+  display: block;
+  margin-top: 10px;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.meta {
+  font-family: var(--font-hand);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 3px 10px;
+  background: var(--c-tinta);
+  color: var(--c-crema);
+  font-size: 12px;
+  font-weight: 700;
+  transform: rotate(-2deg);
+}

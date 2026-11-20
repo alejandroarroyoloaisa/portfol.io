@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgis/postgis:17-3.5
+    container_name: portfolio-db
+    environment:
+      POSTGRES_USER: portfolio
+      POSTGRES_PASSWORD: portfolio
+      POSTGRES_DB: portfolio
+    ports:
+      - "5434:5432"
+    volumes:
+      - portfolio-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portfolio"]
+      interval: 3s
+      retries: 20
+  # API en contenedor (opcional; en desarrollo se suele lanzar con `pnpm dev:api`)
+  api:
+    profiles: ["full"]
+    build: { context: ., dockerfile: apps/api/Dockerfile }
+    environment:
+      DATABASE_URL: postgresql://portfolio:portfolio@db:5432/portfolio?schema=public
+      JWT_SECRET: cambia-este-secreto
+      JWT_REFRESH_SECRET: cambia-este-otro-secreto
+      PUBLIC_URL: http://localhost:3000
+      CORS_ORIGINS: http://localhost:3001,http://localhost:8081
+    ports: ["3000:3000"]
+    volumes: ["portfolio-uploads:/repo/apps/api/uploads"]
+    depends_on: { db: { condition: service_healthy } }
+volumes:
+  portfolio-db:
+  portfolio-uploads:

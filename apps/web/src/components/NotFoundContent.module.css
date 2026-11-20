@@ -1,0 +1,72 @@
+.wrap {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 30px;
+  align-items: center;
+  padding-top: 64px;
+  padding-bottom: 80px;
+}
+
+.kicker {
+  font-size: 30px;
+  color: var(--c-anotacion);
+  transform: rotate(-2deg);
+  transform-origin: left;
+}
+
+.title {
+  margin-top: 6px;
+  font-size: clamp(48px, 7vw, 96px);
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+}
+
+.text {
+  margin-top: 18px;
+  max-width: 520px;
+  font-size: 19px;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.art {
+  position: relative;
+  height: 360px;
+}
+
+.blob {
+  position: absolute;
+  inset: 0 auto auto 10%;
+  width: 300px;
+  height: 300px;
+}
+
+.paper {
+  position: absolute;
+  left: 30%;
+  top: 70px;
+  width: 230px;
+  height: 250px;
+  padding: 12px;
+  background: var(--c-blanco);
+  transform: rotate(-7deg);
+  box-shadow: var(--shadow-cut-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 92px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+}
+
+.paper > span:first-child {
+  position: absolute;
+  inset: 12px;
+  border: 3px dashed var(--c-arena);
+}

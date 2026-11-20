@@ -1,0 +1,62 @@
+{
+  "expo": {
+    "name": "Portfol.io",
+    "slug": "portfolio",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#FFF4E0",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "io.portfol.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#FFF4E0",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "softwareKeyboardLayoutMode": "resize",
+      "package": "io.portfol.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "name": "Portfol.io",
+      "themeColor": "#2340E8",
+      "backgroundColor": "#FFF4E0"
+    },
+    "scheme": "portfolio",
+    "plugins": [
+      "expo-secure-store",
+      "expo-image",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#2340E8",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Portfol.io necesita acceder a tus fotos para publicar tus obras y tu foto de perfil.",
+          "cameraPermission": "Portfol.io necesita la cámara para fotografiar tus obras."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#FF6B4A"
+        }
+      ]
+    ],
+    "extra": {
+      "apiUrl": "http://localhost:3000/api/v1"
+    }
+  }
+}

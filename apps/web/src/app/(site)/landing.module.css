@@ -1,0 +1,295 @@
+.hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 40px;
+  align-items: center;
+  padding-top: 56px;
+  padding-bottom: 48px;
+}
+
+.kicker {
+  font-size: 30px;
+  color: var(--c-anotacion);
+  transform: rotate(-2deg);
+  transform-origin: left;
+}
+
+.title {
+  margin-top: 6px;
+  font-size: clamp(54px, 7.4vw, 108px);
+  letter-spacing: -0.05em;
+  line-height: 0.88;
+}
+
+.title em {
+  font-style: normal;
+  color: var(--c-cobalto);
+}
+
+.lead {
+  margin-top: 22px;
+  max-width: 540px;
+  font-size: 19px;
+  line-height: 1.5;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.collage {
+  position: relative;
+  height: 600px;
+}
+
+.blob {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 320px;
+  height: 320px;
+}
+
+.leaf {
+  position: absolute;
+  left: 0;
+  bottom: 10px;
+  width: 120px;
+  height: 200px;
+}
+
+.cut {
+  position: absolute;
+  padding: 10px 10px 12px;
+  background: var(--c-blanco);
+  box-shadow: var(--shadow-cut-lg);
+  color: var(--c-tinta);
+}
+
+.cut:hover {
+  color: var(--c-tinta);
+}
+
+.cutImg {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.cutCaption {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-hand);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.c1 {
+  left: 8%;
+  top: 30px;
+  width: 260px;
+  transform: rotate(-4deg);
+}
+
+.c1 .cutImg {
+  height: 300px;
+}
+
+.c2 {
+  right: 4%;
+  top: 200px;
+  width: 210px;
+  transform: rotate(5deg);
+}
+
+.c2 .cutImg {
+  height: 220px;
+}
+
+.c3 {
+  left: 30%;
+  bottom: 0;
+  width: 180px;
+  transform: rotate(-1.5deg);
+}
+
+.c3 .cutImg {
+  height: 150px;
+}
+
+@media (max-width: 760px) {
+  .collage {
+    height: 430px;
+  }
+  .c1 {
+    width: 200px;
+    left: 2%;
+  }
+  .c1 .cutImg {
+    height: 230px;
+  }
+  .c2 {
+    width: 170px;
+    top: 150px;
+  }
+  .c2 .cutImg {
+    height: 180px;
+  }
+  .c3 {
+    width: 150px;
+    left: 14%;
+  }
+  .c3 .cutImg {
+    height: 110px;
+  }
+  .blob {
+    width: 220px;
+    height: 220px;
+  }
+}
+
+.band {
+  background: var(--c-tinta);
+  color: var(--c-crema);
+}
+
+.bandInner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  padding-top: 26px;
+  padding-bottom: 26px;
+}
+
+.bandValue {
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.bandLabel {
+  font-size: 24px;
+  color: var(--c-mostaza);
+}
+
+.section {
+  padding-top: 64px;
+  padding-bottom: 24px;
+}
+
+.h2 {
+  font-size: clamp(40px, 5vw, 64px);
+  letter-spacing: -0.045em;
+  line-height: 0.9;
+}
+
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.audiences {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 34px;
+  margin-top: 34px;
+}
+
+.audience {
+  position: relative;
+  padding: 30px 28px 32px;
+  border-radius: 6px 48px 6px 48px;
+}
+
+.audienceKicker {
+  font-size: 26px;
+}
+
+.audienceTitle {
+  margin-top: 6px;
+  font-size: 40px;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+}
+
+.audience ul {
+  margin: 18px 0 22px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.audience li {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.audience li::before {
+  content: '';
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  transform: translateY(1px);
+}
+
+.demos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 30px;
+  margin-top: 34px;
+  list-style: none;
+  padding: 0;
+}
+
+.demo {
+  display: block;
+  padding: 10px 10px 16px;
+  background: var(--c-blanco);
+  box-shadow: var(--shadow-cut);
+  transition: transform 0.15s ease;
+}
+
+.demo:hover {
+  color: var(--c-tinta);
+  transform: translateY(-3px) rotate(0deg) !important;
+}
+
+.demoImg {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.demoName {
+  display: block;
+  margin-top: 12px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.demoMeta {
+  display: block;
+  font-family: var(--font-hand);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.callsWrap {
+  padding-bottom: 72px;
+}

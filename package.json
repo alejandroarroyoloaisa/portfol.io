@@ -1,0 +1,26 @@
+{
+  "name": "portfolio",
+  "private": true,
+  "description": "Portfol.io — red profesional para artistas pintores (monorepo)",
+  "packageManager": "pnpm@11.24.0",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "turbo run build",
+    "build:packages": "turbo run build --filter=./packages/*",
+    "dev": "turbo run dev --parallel",
+    "dev:api": "pnpm --filter @portfolio/api dev",
+    "dev:web": "pnpm --filter @portfolio/web dev",
+    "dev:mobile": "pnpm --filter @portfolio/mobile start",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "db:migrate": "pnpm --filter @portfolio/api prisma:migrate",
+    "db:seed": "pnpm --filter @portfolio/api seed",
+    "db:reset": "pnpm --filter @portfolio/api db:reset"
+  },
+  "devDependencies": {
+    "turbo": "^2.11.12",
+    "typescript": "~5.9.3"
+  }
+}

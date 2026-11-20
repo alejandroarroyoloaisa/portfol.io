@@ -1,0 +1,15 @@
+{
+  "name": "@portfolio/schemas",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tipos, catálogos, validaciones Zod y reglas de dominio compartidas",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": { "zod": "^4.6.7" },
+  "devDependencies": { "typescript": "~5.9.3", "vitest": "^5.1.1", "@vitest/coverage-v8": "^5.1.1" }
+}

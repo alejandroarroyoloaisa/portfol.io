@@ -1,0 +1,150 @@
+.back {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.who {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin-top: 12px;
+  font-weight: 700;
+}
+
+.letter {
+  margin-top: 12px;
+  white-space: pre-line;
+  font-size: 17px;
+  line-height: 1.6;
+  max-width: 70ch;
+}
+
+.works {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+  gap: 22px;
+  margin-top: 16px;
+  list-style: none;
+  padding: 0;
+}
+
+.work {
+  display: block;
+  margin: 0;
+  padding: 8px 8px 12px;
+  background: var(--c-blanco);
+  box-shadow: var(--shadow-cut);
+}
+
+.workImg {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.workTitle {
+  display: block;
+  margin-top: 8px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.workMeta {
+  display: block;
+  font-family: var(--font-hand);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.docs {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.doc {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+  padding: 12px 14px;
+  border: 2px solid var(--c-arena);
+  border-radius: 16px;
+  font-weight: 700;
+}
+
+.docKind {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--c-mostaza);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.history {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0 0 0 22px;
+  border-left: 3px solid var(--c-tinta);
+}
+
+.history li {
+  position: relative;
+  padding-bottom: 16px;
+}
+
+.history li:last-child {
+  padding-bottom: 0;
+}
+
+.dot {
+  position: absolute;
+  left: -33px;
+  top: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--c-tinta);
+}
+
+.when {
+  font-family: var(--font-hand);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.note {
+  margin-top: 4px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--c-crema);
+  font-size: 14px;
+}

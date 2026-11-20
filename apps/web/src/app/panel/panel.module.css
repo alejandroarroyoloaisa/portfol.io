@@ -1,0 +1,288 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+  background: var(--c-crema);
+}
+
+.aside {
+  flex: 1 1 220px;
+  max-width: 100%;
+  padding: 26px 18px;
+  background: var(--c-tinta);
+  color: var(--c-crema);
+  display: flex;
+  flex-direction: column;
+}
+
+.asideKicker {
+  font-size: 21px;
+  color: var(--c-mostaza);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 28px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.nav a {
+  padding: 12px 16px;
+  border-radius: 999px;
+  color: var(--c-crema);
+}
+
+.nav a:hover {
+  color: var(--c-mostaza);
+}
+
+.nav a[aria-current='page'] {
+  background: var(--c-coral);
+  color: var(--c-tinta);
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 40px;
+  padding-top: 18px;
+  border-top: 2px dashed #4a4438;
+}
+
+.userName {
+  display: block;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.userOrg {
+  display: block;
+  font-size: 13px;
+}
+
+.logout {
+  margin-top: 14px;
+}
+
+.logout button {
+  width: 100%;
+  min-height: 42px;
+  border-radius: 999px;
+  border: 2px solid var(--c-crema);
+  background: transparent;
+  color: var(--c-crema);
+  font: 800 14px var(--font-sans);
+  cursor: pointer;
+}
+
+.logout button:hover {
+  background: var(--c-crema);
+  color: var(--c-tinta);
+}
+
+.main {
+  flex: 999 1 560px;
+  min-width: 0;
+  padding: 30px clamp(16px, 3vw, 44px) 48px;
+}
+
+@media (max-width: 600px) {
+  .stat dd {
+    font-size: 34px;
+  }
+  .stat dt {
+    font-size: 19px;
+  }
+}
+
+@media (max-width: 800px) {
+  .aside {
+    padding: 18px 16px;
+  }
+  .nav {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-top: 16px;
+    padding-bottom: 4px;
+    white-space: nowrap;
+  }
+  .nav a {
+    padding: 10px 14px;
+  }
+  .user {
+    margin-top: 16px;
+  }
+}
+
+/* ---------- Comunes de las páginas ---------- */
+
+.pageHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.kicker {
+  font-size: 25px;
+  color: var(--c-anotacion);
+}
+
+.h1 {
+  font-size: clamp(36px, 4.5vw, 60px);
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+  overflow-wrap: anywhere;
+}
+
+.headActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: 14px;
+  margin-top: 26px;
+}
+
+.stat {
+  padding: 18px;
+  border-radius: 24px;
+  background: var(--c-blanco);
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+}
+
+.stat dd {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.stat dt {
+  font-family: var(--font-hand);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.card {
+  margin-top: 26px;
+  padding: 20px;
+  border-radius: 28px;
+  background: var(--c-blanco);
+}
+
+.cardHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.h2 {
+  font-size: 26px;
+  letter-spacing: -0.03em;
+}
+
+.empty {
+  margin: 16px 0 0;
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.flash {
+  margin-top: 18px;
+}
+
+/* ---------- Lista de convocatorias ---------- */
+
+.callList {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.callRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px 20px;
+  align-items: center;
+  padding: 16px 18px;
+  border-radius: 20px;
+  border: 2px solid var(--c-arena);
+}
+
+@media (max-width: 700px) {
+  .callRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.callTitle {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.callMeta {
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.stack {
+  display: flex;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--c-arena);
+  margin-top: 10px;
+  max-width: 420px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend i {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid var(--c-tinta);
+}
+
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

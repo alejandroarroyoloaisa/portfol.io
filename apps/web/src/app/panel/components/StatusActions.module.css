@@ -1,0 +1,54 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.nowrap {
+  flex-wrap: nowrap;
+}
+
+.final {
+  font-family: var(--font-hand);
+  font-size: 19px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.dialog {
+  width: min(520px, calc(100vw - 32px));
+  padding: 0;
+  border: 2px solid var(--c-tinta);
+  border-radius: 28px;
+  background: var(--c-crema);
+  color: var(--c-tinta);
+}
+
+.dialog::backdrop {
+  background: rgba(20, 20, 20, 0.55);
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+  padding: 24px;
+}
+
+.title {
+  font-size: 28px;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.toast {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}

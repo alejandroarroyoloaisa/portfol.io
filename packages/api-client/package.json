@@ -1,0 +1,11 @@
+{
+  "name": "@portfolio/api-client",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cliente tipado de la API de Portfol.io (móvil y web)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json --noEmit" },
+  "dependencies": { "@portfolio/schemas": "workspace:*" },
+  "devDependencies": { "typescript": "~5.9.3" }
+}

@@ -1,0 +1,32 @@
+.card {
+  display: block;
+  height: 100%;
+  padding: 20px 22px;
+  border-radius: 4px 32px 4px 32px;
+  transition: transform 0.15s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px) rotate(0deg) !important;
+}
+
+.when {
+  display: block;
+  font-size: 22px;
+}
+
+.title {
+  display: block;
+  margin-top: 4px;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.meta {
+  display: block;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 700;
+}

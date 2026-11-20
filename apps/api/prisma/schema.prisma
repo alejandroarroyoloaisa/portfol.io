@@ -1,0 +1,485 @@
+// Modelo de datos de Portfol.io (Sección 6 de la especificación).
+// La columna geográfica «location» y el índice de texto completo «search» se crean con SQL propio
+// en la migración inicial (PostGIS y tsvector no tienen tipo nativo en Prisma).
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+  binaryTargets   = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [postgis, pg_trgm]
+}
+
+enum Role {
+  artista
+  galeria
+  coleccionista
+  institucion
+  admin
+}
+
+enum ArtworkStatus {
+  exposicion
+  privada
+  proceso
+}
+
+enum CallType {
+  premio
+  exposicion
+  residencia
+  beca
+  feria
+}
+
+enum Scope {
+  local
+  regional
+  nacional
+  internacional
+}
+
+enum CallStatus {
+  borrador
+  abierta
+  cerrada
+  resuelta
+}
+
+enum ApplicationStatus {
+  borrador
+  enviada
+  en_revision
+  preseleccionada
+  aceptada
+  no_seleccionada
+  retirada
+}
+
+enum ConnectionStatus {
+  pendiente
+  aceptada
+  ignorada
+}
+
+model User {
+  id                 String    @id @default(uuid()) @db.Uuid
+  email              String?   @unique
+  passwordHash       String?
+  googleId           String?   @unique
+  appleId            String?   @unique
+  role               Role      @default(artista)
+  name               String
+  handle             String    @unique
+  headline           String?
+  bio                String?
+  city               String?
+  country            String?   @default("ES") @db.Char(2)
+  lat                Float?
+  lng                Float?
+  location           Unsupported("geography(Point,4326)")?
+  techniques         String[]  @default([])
+  themes             String[]  @default([])
+  acceptsCommissions Boolean   @default(false)
+  openToCalls        Boolean   @default(true)
+  career             Json      @default("[]")
+  avatarKey          String?
+  verified           Boolean   @default(false)
+  onboarded          Boolean   @default(false)
+  settings           Json      @default("{}")
+  // Solo organizaciones
+  since              Int?
+  address            String?
+  openingHours       String?
+  createdAt          DateTime  @default(now()) @db.Timestamptz
+  updatedAt          DateTime  @updatedAt @db.Timestamptz
+
+  refreshTokens   RefreshToken[]
+  passwordResets  PasswordReset[]
+  series          Series[]
+  artworks        Artwork[]
+  likes           Like[]
+  saves           Save[]
+  comments        Comment[]
+  following       Follow[]          @relation("follower")
+  followers       Follow[]          @relation("followee")
+  sentRequests    Connection[]      @relation("requester")
+  receivedReqs    Connection[]      @relation("receiver")
+  endorsementsGiven    Endorsement[] @relation("endorser")
+  endorsementsReceived Endorsement[] @relation("endorsed")
+  calls           Call[]
+  applications    Application[]
+  memberOf        OrgMember[]       @relation("member")
+  members         OrgMember[]       @relation("org")
+  representedBy   OrgArtist[]       @relation("artist")
+  representing    OrgArtist[]       @relation("gallery")
+  exhibitions     Exhibition[]      @relation("expoArtist")
+  hostedExpos     Exhibition[]      @relation("expoOrg")
+  participations  Participant[]
+  messages        Message[]
+  notifications   Notification[]    @relation("recipient")
+  actedNotifs     Notification[]    @relation("actor")
+  profileViews    ProfileView[]     @relation("viewed")
+  viewsMade       ProfileView[]     @relation("viewer")
+  pushTokens      PushToken[]
+  reports         Report[]
+}
+
+model RefreshToken {
+  id         String    @id @default(uuid()) @db.Uuid
+  userId     String    @db.Uuid
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash  String    @unique
+  family     String    @db.Uuid
+  expiresAt  DateTime  @db.Timestamptz
+  revokedAt  DateTime? @db.Timestamptz
+  createdAt  DateTime  @default(now()) @db.Timestamptz
+
+  @@index([family])
+}
+
+model PasswordReset {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime  @db.Timestamptz
+  usedAt    DateTime? @db.Timestamptz
+}
+
+model OrgMember {
+  orgId  String @db.Uuid
+  userId String @db.Uuid
+  role   String @default("editor") // admin | editor
+  org    User   @relation("org", fields: [orgId], references: [id], onDelete: Cascade)
+  user   User   @relation("member", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([orgId, userId])
+}
+
+model OrgArtist {
+  orgId    String @db.Uuid
+  artistId String @db.Uuid
+  org      User   @relation("gallery", fields: [orgId], references: [id], onDelete: Cascade)
+  artist   User   @relation("artist", fields: [artistId], references: [id], onDelete: Cascade)
+
+  @@id([orgId, artistId])
+}
+
+model Series {
+  id          String    @id @default(uuid()) @db.Uuid
+  artistId    String    @db.Uuid
+  artist      User      @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  createdAt   DateTime  @default(now()) @db.Timestamptz
+  artworks    Artwork[]
+  exhibitions Exhibition[]
+}
+
+model Artwork {
+  id             String        @id @default(uuid()) @db.Uuid
+  artistId       String        @db.Uuid
+  artist         User          @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  seriesId       String?       @db.Uuid
+  series         Series?       @relation(fields: [seriesId], references: [id], onDelete: SetNull)
+  seriesPosition Int?
+  title          String        @db.VarChar(120)
+  technique      String
+  widthCm        Float
+  heightCm       Float
+  year           Int           @db.SmallInt
+  status         ArtworkStatus
+  note           String?
+  annotation     String?
+  themes         String[]      @default([])
+  draft          Boolean       @default(false)
+  viewsCount     Int           @default(0)
+  search         Unsupported("tsvector")?
+  publishedAt    DateTime?     @db.Timestamptz
+  createdAt      DateTime      @default(now()) @db.Timestamptz
+  updatedAt      DateTime      @updatedAt @db.Timestamptz
+
+  images       ArtworkImage[]
+  likes        Like[]
+  saves        Save[]
+  comments     Comment[]
+  applications ApplicationArtwork[]
+  messages     Message[]
+  exhibitions  ExhibitionArtwork[]
+  views        ArtworkView[]
+
+  @@index([artistId, publishedAt])
+  @@index([publishedAt])
+}
+
+model ArtworkImage {
+  id        String  @id @default(uuid()) @db.Uuid
+  artworkId String  @db.Uuid
+  artwork   Artwork @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+  key       String
+  order     Int     @default(0)
+  width     Int
+  height    Int
+  color     String  @default("#E8DCC4")
+}
+
+model Like {
+  userId    String   @db.Uuid
+  artworkId String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  artwork   Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @db.Timestamptz
+
+  @@id([userId, artworkId])
+}
+
+model Save {
+  userId    String   @db.Uuid
+  artworkId String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  artwork   Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @db.Timestamptz
+
+  @@id([userId, artworkId])
+}
+
+model Comment {
+  id        String   @id @default(uuid()) @db.Uuid
+  artworkId String   @db.Uuid
+  authorId  String   @db.Uuid
+  artwork   Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  text      String
+  createdAt DateTime @default(now()) @db.Timestamptz
+}
+
+model Follow {
+  followerId String   @db.Uuid
+  followeeId String   @db.Uuid
+  follower   User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followee   User     @relation("followee", fields: [followeeId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now()) @db.Timestamptz
+
+  @@id([followerId, followeeId])
+}
+
+model Connection {
+  id          String           @id @default(uuid()) @db.Uuid
+  requesterId String           @db.Uuid
+  receiverId  String           @db.Uuid
+  requester   User             @relation("requester", fields: [requesterId], references: [id], onDelete: Cascade)
+  receiver    User             @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  status      ConnectionStatus @default(pendiente)
+  createdAt   DateTime         @default(now()) @db.Timestamptz
+  respondedAt DateTime?        @db.Timestamptz
+
+  @@unique([requesterId, receiverId])
+  @@index([receiverId, status])
+}
+
+model Endorsement {
+  endorserId String   @db.Uuid
+  userId     String   @db.Uuid
+  technique  String
+  endorser   User     @relation("endorser", fields: [endorserId], references: [id], onDelete: Cascade)
+  user       User     @relation("endorsed", fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now()) @db.Timestamptz
+
+  @@id([endorserId, userId, technique])
+}
+
+model Call {
+  id              String     @id @default(uuid()) @db.Uuid
+  orgId           String     @db.Uuid
+  org             User       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  type            CallType
+  title           String
+  summary         String?
+  edition         String?
+  basesUrl        String?
+  prize           String?
+  places          Int?
+  closesAt        DateTime   @db.Timestamptz
+  timeline        Json       @default("[]")
+  requirements    String[]   @default([])
+  scope           Scope
+  city            String?
+  country         String?    @default("ES") @db.Char(2)
+  lat             Float?
+  lng             Float?
+  techniques      String[]   @default([])
+  themes          String[]   @default([])
+  maxArtworks     Int        @default(3)
+  maxFormatCm     Int?
+  minYear         Int?
+  requiresCv      Boolean    @default(true)
+  requiresDossier Boolean    @default(true)
+  status          CallStatus @default(abierta)
+  createdAt       DateTime   @default(now()) @db.Timestamptz
+  updatedAt       DateTime   @updatedAt @db.Timestamptz
+
+  applications  Application[]
+  conversations Conversation[]
+
+  @@index([status, closesAt])
+}
+
+model Application {
+  id          String            @id @default(uuid()) @db.Uuid
+  callId      String            @db.Uuid
+  artistId    String            @db.Uuid
+  call        Call              @relation(fields: [callId], references: [id], onDelete: Cascade)
+  artist      User              @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  status      ApplicationStatus @default(borrador)
+  match       Int?              @db.SmallInt
+  letter      String            @default("")
+  documents   Json              @default("[]")
+  history     Json              @default("[]")
+  feedback    String?
+  submittedAt DateTime?         @db.Timestamptz
+  createdAt   DateTime          @default(now()) @db.Timestamptz
+  updatedAt   DateTime          @updatedAt @db.Timestamptz
+
+  artworks      ApplicationArtwork[]
+  conversations Conversation[]
+
+  @@unique([callId, artistId])
+}
+
+model ApplicationArtwork {
+  applicationId String      @db.Uuid
+  artworkId     String      @db.Uuid
+  order         Int         @default(0)
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  artwork       Artwork     @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+
+  @@id([applicationId, artworkId])
+}
+
+model Exhibition {
+  id        String    @id @default(uuid()) @db.Uuid
+  orgId     String?   @db.Uuid
+  artistId  String    @db.Uuid
+  seriesId  String?   @db.Uuid
+  org       User?     @relation("expoOrg", fields: [orgId], references: [id], onDelete: SetNull)
+  artist    User      @relation("expoArtist", fields: [artistId], references: [id], onDelete: Cascade)
+  series    Series?   @relation(fields: [seriesId], references: [id], onDelete: SetNull)
+  title     String
+  startsAt  DateTime? @db.Timestamptz
+  endsAt    DateTime? @db.Timestamptz
+  virtual   Boolean   @default(false)
+  createdAt DateTime  @default(now()) @db.Timestamptz
+  artworks  ExhibitionArtwork[]
+}
+
+model ExhibitionArtwork {
+  exhibitionId String     @db.Uuid
+  artworkId    String     @db.Uuid
+  order        Int        @default(0)
+  exhibition   Exhibition @relation(fields: [exhibitionId], references: [id], onDelete: Cascade)
+  artwork      Artwork    @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+
+  @@id([exhibitionId, artworkId])
+}
+
+model Conversation {
+  id            String        @id @default(uuid()) @db.Uuid
+  callId        String?       @db.Uuid
+  applicationId String?       @db.Uuid
+  call          Call?         @relation(fields: [callId], references: [id], onDelete: SetNull)
+  application   Application?  @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+  createdAt     DateTime      @default(now()) @db.Timestamptz
+  updatedAt     DateTime      @default(now()) @db.Timestamptz
+  participants  Participant[]
+  messages      Message[]
+}
+
+model Participant {
+  conversationId String       @db.Uuid
+  userId         String       @db.Uuid
+  lastReadAt     DateTime?    @db.Timestamptz
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([conversationId, userId])
+  @@index([userId])
+}
+
+model Message {
+  id             String       @id @default(uuid()) @db.Uuid
+  conversationId String       @db.Uuid
+  authorId       String       @db.Uuid
+  text           String       @default("")
+  artworkId      String?      @db.Uuid
+  sentAt         DateTime     @default(now()) @db.Timestamptz
+  readAt         DateTime?    @db.Timestamptz
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  author         User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  artwork        Artwork?     @relation(fields: [artworkId], references: [id], onDelete: SetNull)
+
+  @@index([conversationId, sentAt])
+}
+
+model Notification {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  actorId   String?  @db.Uuid
+  type      String
+  text      String
+  link      String?
+  data      Json     @default("{}")
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now()) @db.Timestamptz
+  user      User     @relation("recipient", fields: [userId], references: [id], onDelete: Cascade)
+  actor     User?    @relation("actor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+}
+
+model ProfileView {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @db.Uuid
+  viewerId   String?  @db.Uuid
+  viewerRole Role?
+  createdAt  DateTime @default(now()) @db.Timestamptz
+  user       User     @relation("viewed", fields: [userId], references: [id], onDelete: Cascade)
+  viewer     User?    @relation("viewer", fields: [viewerId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+}
+
+model ArtworkView {
+  id        String   @id @default(uuid()) @db.Uuid
+  artworkId String   @db.Uuid
+  viewerId  String?  @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz
+  artwork   Artwork  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+
+  @@index([artworkId, createdAt])
+}
+
+model PushToken {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  token     String   @unique
+  platform  String
+  createdAt DateTime @default(now()) @db.Timestamptz
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Report {
+  id         String   @id @default(uuid()) @db.Uuid
+  reporterId String   @db.Uuid
+  targetType String
+  targetId   String   @db.Uuid
+  reason     String
+  details    String?
+  status     String   @default("pendiente")
+  createdAt  DateTime @default(now()) @db.Timestamptz
+  reporter   User     @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+}
